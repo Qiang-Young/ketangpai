@@ -106,7 +106,7 @@ public class UsersHandler {
     public String updateUserface(MultipartFile file,String id){
         FastDFSUtils fastDFSUtils = new FastDFSUtils();
         String fileId = fastDFSUtils.upload(file);
-        String url = "http://192.168.219.130/" + fileId;
+        String url = "http://192.168.219.131/" + fileId;
         if(updateuserface(url,id) == 1){
             return ("更新成功！！  url=" + url);
         }

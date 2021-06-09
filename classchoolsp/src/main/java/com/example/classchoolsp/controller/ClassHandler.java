@@ -43,4 +43,9 @@ public class ClassHandler {
             return "error";
         }
     }
+
+    @RequestMapping("/delete/{id}")
+    public void delete(@PathVariable("id") String id){
+        classRepository.deleteById(id);
+    }
 }
