@@ -6,15 +6,21 @@ import Enrol from "../views/Enrol.vue";
 import Class from "../views/Class.vue";
 import Lunwen from "../views/Lunwen.vue";
 import Usersetting from "../views/Usersetting.vue";
+import Oneteachclass from "@/views/Oneteachclass";
 Vue.use(VueRouter)
 import Oneclass from "../views/Oneclass.vue";
 import Mywork from "../views/class/Mywork.vue";
 const routes = [
     {
-        path: 'Mywork',
+        path: '/Mywork',
         name: 'Mywork',
         component: Mywork,
     },
+  {
+    path: '/oneteachclass',
+    name: '所教的一堂课',
+    component: Oneteachclass
+  },
     {
       path: '/Oneclass',
       name: 'Oneclass',

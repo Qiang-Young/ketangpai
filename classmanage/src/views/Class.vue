@@ -123,7 +123,7 @@
                 <el-button type="primary" style="margin-top: 0px;margin-left: 690px" plain>归档管理</el-button>
                 <el-input v-model="search"  placeholder="搜索我学的课程" style="margin-top: 5px;width: 200px;border-radius: 30px;margin-left: 30px"/>
                 <el-button class="el-icon-search" @click="searchclass"></el-button>
-<!--               所有课程-->
+<!--               学的所有课程-->
                 <div v-if="this.searchlist.length == 0" style="width: 1150px;margin: 0 auto;margin-top: 20px">
                   <el-collapse v-model="activityName">
                     <el-collapse-item  title="我的所有课程" name="1" >
@@ -252,6 +252,139 @@
                 <el-button type="primary" style="margin-top: 0px;margin-left: 690px" plain>归档管理</el-button>
                 <el-input v-model="search2"  placeholder="搜索我教的课程" style="margin-top: 5px;width: 200px;border-radius: 30px;margin-left: 30px"/>
                 <el-button class="el-icon-search" @click="searchteach"></el-button>
+<!--                教的所有课程-->
+                <div v-if="this.searchlist2.length == 0" style="width: 1150px;margin: 0 auto;margin-top: 20px">
+                  <el-collapse v-model="activityName">
+                    <el-collapse-item  title="我的所有课程" name="1" >
+
+                      <div >
+                        <el-row :gutter="20" align="center" style="margin-left: 0">
+                          <el-col v-for="(item,key) in userclass.myteach" :span="1"
+                                  style="height: 310px;width: 259px;box-shadow: 1px 4px 12px 0 rgba(0, 0, 0, 0.1)" >
+                            <div @click="tooneteachclass(teachclass[key].classid)"
+                                 :style="backimg((key)%3)"
+                                 style="height: 150px;border-radius: 10px 10px 0px 0px;text-align: left">
+                              <div style="margin-left: 15px">
+                                <span style="color: darkgray;font-size: 5px">{{teachclass[key].classtime[0]}}{{teachclass[key].classtime[1]}}</span>
+                              </div>
+                              <div style="margin-top: 10px;margin-left: 15px">
+                                <span style="color: beige;font-size: 20px">{{teachclass[key].classname}}</span>
+                              </div>
+                              <div style="margin-left: 20px;margin-top: 20px">
+                                <img src="../assets/class/ma.svg" width="13" height="13" >
+                                <span style="color: beige">课堂码:</span>
+                                <span style="color: beige">{{teachclass[key].classid}}</span>
+                              </div>
+                            </div>
+                            <div style="border-radius: 2px;text-align: left;height: 80px">
+                              <div style="margin-left: 25px;margin-top: 10px">
+                                <span style="font-size: 15px">近期作业</span>
+                              </div>
+                              <div v-for="count in 2" style="margin-top: 5px;height: 20px;margin-left: 25px">
+                                <span style="font-size: 14px;color: #303133;font-weight: 100">{{teachclass[key].assignment[count-1]}}</span>
+                              </div>
+                              <!--                      <div style="margin-top: 5px;margin-left: 25px">-->
+                              <!--                        <span style="font-size: 14px;color: #303133;font-weight: 100">7 校验</span>-->
+                              <!--                      </div>-->
+                              <div style="height: 10px;margin-top: 0px">
+                                <el-divider></el-divider>
+                              </div>
+
+                              <div>
+                                <span>负责人:</span>
+                                <span>{{teachclass[key].manager}}</span>
+                                <img style="margin-left: 80px" src="../assets/class/top.svg" width="12" height="12">
+                                <span style="margin-left: 5px">置顶</span>
+                                <el-dropdown >
+                                  <img style="margin-left: 10px" src="../assets/class/etc.svg" height="12" width="12">
+                                  <el-dropdown-menu slot="dropdown" trigger="click">
+                                    <div>
+                                      <el-button @click="deleteteachclass(teachclass[key].classid)" target="_blank" >删除</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button @click="interfile" target="_blank" >归档</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button  target="_blank" >编辑</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button target="_blank" >复制课程</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button target="_blank" >打包下载</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button >转让</el-button>
+                                    </div>
+                                  </el-dropdown-menu>
+
+                                </el-dropdown>
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
+                      </div>
+
+                    </el-collapse-item>
+                  </el-collapse>
+                </div>
+<!--                搜索我教的课-->
+                <div v-if="this.searchlist2.length > 0" style="width: 1150px;margin: 0 auto;margin-top: 20px">
+                  <el-collapse v-model="activityName2">
+                    <el-collapse-item  title="搜索结果" name="2" >
+                      <div >
+                        <el-row :gutter="20" align="center" style="margin-left: 0">
+                          <el-col v-for="(item,key) in this.searchlist2" :span="1" style="height: 310px;width: 259px;box-shadow: 1px 4px 12px 0 rgba(0, 0, 0, 0.1)" >
+                            <div @click="tooneclass(item.classid)" :style="backimg((key)%3)" style="height: 150px;border-radius: 10px 10px 0px 0px;text-align: left">
+                              <div style="margin-left: 15px">
+                                <span style="color: darkgray;font-size: 5px">{{item.classtime[0]}}{{item.classtime[1]}}</span>
+                              </div>
+                              <div style="margin-top: 10px;margin-left: 15px">
+                                <span style="color: beige;font-size: 20px">{{item.classname}}</span>
+                              </div>
+                              <div style="margin-left: 20px;margin-top: 20px">
+                                <img src="../assets/class/ma.svg" width="13" height="13" >
+                                <span style="color: beige">课堂码:</span>
+                                <span style="color: beige">{{item.classid}}</span>
+                              </div>
+                            </div>
+                            <div style="border-radius: 2px;text-align: left;height: 80px">
+                              <div style="margin-left: 25px;margin-top: 10px">
+                                <span style="font-size: 15px">近期作业</span>
+                              </div>
+                              <div v-for="count in 2" style="margin-top: 5px;margin-left: 25px">
+                                <span style="font-size: 14px;color: #303133;font-weight: 100">{{item.assignment[count-1]}}</span>
+                              </div>
+                              <div style="height: 10px;margin-top: 0px">
+                                <el-divider></el-divider>
+                              </div>
+
+                              <div>
+                                <span>负责人:</span>
+                                <span>{{item.manager}}</span>
+                                <img style="margin-left: 80px" src="../assets/class/top.svg" width="12" height="12">
+                                <span style="margin-left: 5px">置顶</span>
+                                <el-dropdown >
+                                  <img style="margin-left: 10px" src="../assets/class/etc.svg" height="12" width="12">
+                                  <el-dropdown-menu slot="dropdown" trigger="click">
+                                    <div>
+                                      <el-button @click="refundclass(item.classid)" target="_blank" >退课</el-button>
+                                    </div>
+                                    <div>
+                                      <el-button @click="interfile" target="_blank" >归档</el-button>
+                                    </div>
+                                  </el-dropdown-menu>
+
+                                </el-dropdown>
+                              </div>
+                            </div>
+                          </el-col>
+                        </el-row>
+                      </div>
+
+                    </el-collapse-item>
+                  </el-collapse>
+                </div>
               </el-tab-pane>
             </el-tabs>
           </div>
@@ -263,9 +396,6 @@
 <!--            <el-button class="el-icon-search" @click="searchclass"></el-button>-->
 <!--          </el-menu>-->
         </div>
-<!--        所有课程-->
-
-<!--        搜索结果-->
 
       </div>
     </el-container>
@@ -331,6 +461,7 @@ export default {
       search2:'',
       myteach:'',
       searchresult: 'no',
+      searchresult2: 'no',
       searchlist:[],
       searchlist2:[],
       activityName: '1',
@@ -368,7 +499,7 @@ export default {
     savecreateclass(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+
           let randomcode = "";
           // 用字符数组的方式随机
           let model = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -397,15 +528,17 @@ export default {
             let userdata = res.data
             if(userdata.myteach == null || userdata.myteach.length == 0){
               userdata.myteach = randomcode
+              _this.userclass.myteach = randomcode
             } else {
               userdata.myteach = res.data.myteach.split(',')
-              userdata.myteach = randomcode
-              userdata.myteach.join(',')
+              userdata.myteach[userdata.myteach.length] = randomcode
+              _this.userclass.myteach[_this.userclass.myteach.length] = randomcode
+              userdata.myteach = userdata.myteach.join(',')
             }
             axios.put('http://localhost:8181/users/update', userdata).then(function (rsp) {
-              alert(rsp)
             })
           })
+          alert('创建成功!');
         } else {
           console.log('error submit!!');
           return false;
@@ -415,7 +548,29 @@ export default {
 
     },
     searchteach(){
-
+      this.searchlist2 = []
+      let search = this.search2;
+      for (let i = 0;i < this.userclass.myteach.length; i++){
+        if (search.length > 0) {
+          if (this.teachclass[i].classid.indexOf(search) != -1 || this.teachclass[i].classname.indexOf(search) != -1) {
+            this.searchlist2[this.searchlist.length] = this.teachclass[i]
+            this.searchresult2 = "yes"
+          }
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '请输入关键词搜索'
+          });
+          return
+        }
+      }
+      if(this.searchresult2 != "yes"){
+        this.$message({
+          type: 'warning',
+          message: '没有该课程'
+        });
+      }
+      this.searchresult2 = "no"
     },
     // 搜索课程
     searchclass(){
@@ -453,9 +608,53 @@ export default {
 
       return style
     },
+    deleteteachclass(ClassId){
+      this.$confirm('您确定删除该课程吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        for (let i = 0; i <= this.userclass.myteach.length - 1; i++) {
+          if (this.userclass.myteach[i] == ClassId) {
+            for (let j = 0; j < this.userclass.myteach.length - 1 - i; j++) {
+              this.userclass.myteach[i + j] = this.userclass.myteach[i + j + 1]
+            }
+            this.userclass.myteach.length = this.userclass.myteach.length - 1
+            let myclass = this.userclass
+            myclass.myteach = this.userclass.myteach.join(',')
+            myclass.classnum = this.userclass.classnum.join(',')
+            for (let k = 0; k<this.teachclass.length;k++){
+              if(this.teachclass[k].classid == ClassId && k < this.teachclass.length-1){
+                for (let x = 0; x < this.teachclass.length-k-1;x++){
+                  this.teachclass[k+x] = this.teachclass[k+x+1]
+                }
+              }
+              if(k == this.teachclass.length-1){
+                this.teachclass[k] = null
+                this.teachclass.length = this.teachclass.length-1
+              }
+            }
+            axios.put('http://localhost:8181/users/update', myclass).then(function (resp) {
+            })
+            axios.delete('http://localhost:8181/class/delete/'+ClassId).then(function (resp) {
+            })
+            return
+          }
+        }
+      })
+    },
     tooneclass(num){
       this.$router.push({
         path: '/Oneclass',
+        query: {
+          userId: this.userId,
+          classid: num
+        }
+      })
+    },
+    tooneteachclass(num){
+      this.$router.push({
+        path: '/oneteachclass',
         query: {
           userId: this.userId,
           classid: num
@@ -622,10 +821,12 @@ export default {
       }
       if(!(_this.userclass.myteach == null || _this.userclass.myteach.length == 0)){
         _this.userclass.myteach = res.data.myteach.split(',')
+
         for(let i = 0; i < _this.userclass.myteach.length; i++){
           axios.get('http://localhost:8181/class/findById/'+_this.userclass.myteach[i]).then(function (resp) {
             _this.teachclass[i] = resp.data
             _this.teachclass[i].assignment = resp.data.assignment.split(',')
+            _this.teachclass[i].classtime = resp.data.classtime.split(',')
           })
         }
       }
