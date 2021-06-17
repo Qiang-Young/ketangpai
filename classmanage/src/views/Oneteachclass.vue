@@ -95,7 +95,36 @@
                           <el-tab-pane>
                             <span slot="label">作业</span>
                             <div style="text-align: left;margin-top: 10px">
-                              <span style="font-size: 12px">共有{{this.classinformation.assignment.length}}个活动</span>
+                              <span style="font-size: 20px">共有{{this.classinformation.assignment.length}}个活动</span>
+                              <el-button style="margin-left: 700px"  class="el-icon-files">批量操作</el-button>
+                              <el-dropdown style="margin-left: 20px">
+                                <span style="color: #4285f4"  class="el-icon-bottom">
+                                下载所有作业
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                  <el-dropdown-item>下载所有作业内容</el-dropdown-item>
+                                  <el-dropdown-item>下载所有作业内容(含批注)
+                                    <span style="color: red;font-weight: bold">vip</span>
+                                  </el-dropdown-item>
+                                </el-dropdown-menu>
+                              </el-dropdown>
+                              <i style="color: #4285f4" class="el-icon-arrow-down el-icon--right"></i>
+
+                              <el-button style="margin-left: 20px" type="success" @click="assignmentflag = true"
+                                         class="el-icon-plus" plain>添加作业</el-button>
+                              <el-dialog title="添加作业" :visible.sync="assignmentflag" width="47%" >
+                                <el-form  :model="ruleForm" :rules="rules" ref="ruleForm"
+                                         label-width="90px" class="demo-ruleForm">
+                                  <el-form-item label="作业标题" prop="assignmentname">
+                                    <el-input maxlength="16" show-word-limit v-model="ruleForm.assignmentname"></el-input>
+                                  </el-form-item>
+                                </el-form>
+                                <span slot="footer" class="dialog-footer">
+                                  <el-button @click="assignmentflag = false">取 消</el-button>
+                                  <el-button type="primary" @click="addassignment('ruleForm')">确 定</el-button>
+                                  </span>
+                              </el-dialog>
+
                             </div>
 
                             <div style="width: 1230px;margin-top: 20px;border-radius: 10px 10px 0 0 ;box-shadow: 1px 4px 12px 0 rgba(0, 0, 0, 0.1)">
@@ -192,9 +221,9 @@
                     </el-container>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane label="配置管理">学情分析</el-tab-pane>
-                <el-tab-pane label="角色管理">成绩管理</el-tab-pane>
-                <el-tab-pane label="定时任务补偿">课程介绍</el-tab-pane>
+                <el-tab-pane label="学情分析">学情分析</el-tab-pane>
+                <el-tab-pane label="成绩管理">成绩管理</el-tab-pane>
+                <el-tab-pane label="课程设置">课程介绍</el-tab-pane>
               </el-tabs>
             </div>
           </div>
@@ -212,9 +241,21 @@
 </template>
 
 <script>
+import { quillEditor } from 'vue-quill-editor'
 export default {
   data(){
     return{
+      ruleForm: {
+        assignmentname: '',
+      },
+      finish: [],
+      rules: {
+        assignmentname: [
+          {required: true, message: '请输入作业名称', trigger: 'blur'},
+          {min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur'}
+        ],
+      },
+      assignmentflag: false,
       classinformation:[],
       backimg:{
         backgroundImage: "url(" + require("../assets/class/4.png") + ")",
@@ -222,6 +263,9 @@ export default {
         backgroundSize: '1224px 200px ',
       }
     }
+  },
+  components:{
+    quillEditor
   },
   methods: {
     tooneclass(){
@@ -231,6 +275,18 @@ export default {
           userId: this.userId,
         }
       })
+    },
+    addassignment(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+          this.assignmentflag = false
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+
     },
     tosetting(){
       this.$router.push({

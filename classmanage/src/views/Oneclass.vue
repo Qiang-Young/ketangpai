@@ -121,9 +121,15 @@
                                       <span style="font-size: 15px">已提交</span>
                                     </div>
                                   </el-col>
-                                  <el-col :span="1" style="width: 100px">
+                                  <el-col v-if="finish[key] != 0" :span="1" style="width: 100px">
                                     <div style="margin-top: 30px">
-                                      <el-button>已提交</el-button>
+                                      <el-button @click="tomywork(item,key)">已提交</el-button>
+                                    </div>
+                                  </el-col>
+
+                                  <el-col v-if="finish[key] == 0" :span="1" style="width: 100px">
+                                    <div style="margin-top: 30px">
+                                      <el-button type="primary" @click="tomywork(item,key)">提交作业</el-button>
                                     </div>
                                   </el-col>
                                 </el-row>
@@ -232,6 +238,17 @@ export default {
         }
       })
     },
+    tomywork(wname,num){
+      this.$router.push({
+        path: '/Mywork',
+        query: {
+          userId: this.userId,
+          classid: this.classid,
+          workname: wname,
+          workindex: num,
+        }
+      })
+    },
     tosetting(){
       this.$router.push({
         path: '/Usersetting',
@@ -254,11 +271,16 @@ export default {
     this.$parent.success = false;
     this.userId = this.$route.query.userId
     this.classid = this.$route.query.classid
+    let workid = this.userId.toString() + this.classid.toString()
     const _this = this
 
     axios.get('http://localhost:8181/class/findById/' + _this.classid).then(function (resp) {
       _this.classinformation = resp.data
       _this.classinformation.assignment = resp.data.assignment.split(',')
+    })
+
+    axios.get('http://localhost:8181/mywork/findById/' + workid).then(function (rsp) {
+      _this.finish = rsp.data.finish.split(',')
     })
   }
 }

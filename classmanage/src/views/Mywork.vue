@@ -103,9 +103,10 @@
                 <el-button type="text" class="el-icon-odometer" style="margin-left: 5px;color: #4285f4">提交历史</el-button>
                 <el-button type="text" class="el-icon-odometer" style="margin-left: 700px;color: #4285f4">重交作业</el-button>
                 <el-button size="mini" style="margin-left: 5px;font-size: small" >查重结果</el-button>
-                <el-button size="mini" style="margin-left: 5px;font-size: small" type="primary">更新提交</el-button>
+                <el-button size="mini" style="margin-left: 5px;font-size: small"
+                           @click="submitfile" type="primary">更新提交</el-button>
               </div>
-              <div style="border-radius: 10px;width: 1100px;height: 350px;
+              <div style="border-radius: 10px;width: 1100px;height: 450px;
               margin-top: 30px;text-align: center;border: solid 1px lightgray" >
                 <div style="text-align: left">
                   <span style="margin-left: 15px;font-size: 23px;font-weight: normal">作业附件</span>
@@ -113,12 +114,19 @@
                 <el-upload
                     class="upload-demo"
                     drag
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    multiple>
+                    action="http://localhost:8181/mywork/workfile"
+                    multiple
+                    ref="upload"
+                    :auto-upload="false"
+                    :data="ruleForm">
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">将作业文件拖到此处，或<em>点击上传</em></div>
                   <div class="el-upload__tip" slot="tip">支持各类文档、图片、代码、压缩包格式</div>
                 </el-upload>
+                <div style="margin-top: 20px">
+                  <el-button   @click="viewwork(fileurl)"
+                               style="margin-left: 0px;color: blue;font-size: 15px">点击查看或下载已经提交的作业</el-button>
+                </div>
                 <div style="text-align: left;margin-top: 20px">
                   <span style="font-size: 17px;font-weight: lighter;margin-left: 15px">作业留言</span>
                   <span style="font-size: 14px;margin-left: 15px;color: #909399">选填</span>
@@ -149,9 +157,17 @@
 export default {
   data(){
     return{
+      ruleForm: {
+        id: this.workid,
+        workindex: parseInt(this.workindex),
+      },
+      workid: '',
+      work: '',
+      workindex: '',
       textarea2:'',
       activeName: 'first',
       workname: '',
+      fileurl: '',
       classinformation:[],
       classid: '',
       userId: '',
@@ -159,6 +175,12 @@ export default {
     }
   },
   methods: {
+    viewwork(goodsId) {
+      window.open(goodsId) //  跳转链接
+    },
+    submitfile(){
+      this.$refs.upload.submit();
+    },
     tohome(){
       this.$router.push('/');
       this.$parent.classbegin = false;
@@ -196,6 +218,17 @@ export default {
     this.userId = this.$route.query.userId
     this.classid = this.$route.query.classid
     this.workname = this.$route.query.workname
+    this.workindex = this.$route.query.workindex
+    this.workid = this.userId.toString() + this.classid.toString()
+
+    const _this = this
+    axios.get('http://localhost:8181/mywork/findById/' + _this.workid).then(function (res) {
+      _this.work = res.data
+      _this.work.workfile = res.data.workfile.split(',')
+
+      _this.fileurl = _this.work.workfile[_this.workindex]
+
+    })
   }
 }
 </script>

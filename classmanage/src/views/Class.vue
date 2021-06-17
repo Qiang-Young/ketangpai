@@ -55,7 +55,7 @@
               <span slot="label">基本信息(必填)</span>
               <el-form ref="form" :rules="rules" :model="form" label-width="80px">
                 <el-form-item label="课程名称" prop="classname">
-                  <el-input v-model="form.classname" ></el-input>
+                  <el-input maxlength="16" show-word-limit v-model="form.classname" ></el-input>
                 </el-form-item>
                 <el-form-item label="教学班级" prop="tcclass">
                   <el-input v-model="form.tcclass" ></el-input>
@@ -107,7 +107,7 @@
                 </div>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="高级设置" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="高级设置" name="second">高级设置</el-tab-pane>
           </el-tabs>
           <div slot="footer" class="dialog-footer">
             <el-button @click="createflag = false">取 消</el-button>
@@ -707,7 +707,27 @@ export default {
           } else {
             if (_this.userclass.classnum == null){
               _this.userclass.classnum = value.toString()
-              axios.put('http://localhost:8181/users/update', _this.userclass).then(function (rsp) {
+              let classdata = _this.userclass
+              classdata.myteach = _this.userclass.myteach.join(',')
+              axios.put('http://localhost:8181/users/update', classdata).then(function (rsp) {
+              })
+              axios.get('http://localhost:8181/class/findById/'+value.toString()).then(function (rp) {
+                let workdata1 = rp.data
+                workdata1 = rp.data.assignment.split(',')
+                let datalen = workdata1.assignment.length
+                let finish = []
+                for(let i = 0; i < datalen; i++){
+                  finish[i] = 0
+                }
+                finish = finish.join(',')
+                let workdata = {
+                  "myworkid": _this.userId + value.toString(),
+                  "userid": _this.userId,
+                  "classnum": value.toString(),
+                  "finish": finish,
+                }
+                axios.post('http://localhost:8181/mywork/save',workdata).then(function (resp){
+                })
               })
               _this.$message({
                 type: 'success',
@@ -718,7 +738,27 @@ export default {
             }
             if(_this.userclass.classnum.length == 0){
               _this.userclass.classnum = value.toString()
-              axios.put('http://localhost:8181/users/update', _this.userclass).then(function (rsp) {
+              let classdata = _this.userclass
+              classdata.myteach = _this.userclass.myteach.join(',')
+              axios.put('http://localhost:8181/users/update', classdata).then(function (rsp) {
+              })
+              axios.get('http://localhost:8181/class/findById/'+value.toString()).then(function (rp) {
+                let workdata1 = rp.data
+                workdata1 = rp.data.assignment.split(',')
+                let datalen = workdata1.assignment.length
+                let finish = []
+                for(let i = 0; i < datalen; i++){
+                  finish[i] = 0
+                }
+                finish = finish.join(',')
+                let workdata = {
+                  "myworkid": _this.userId + value.toString(),
+                  "userid": _this.userId,
+                  "classnum": value.toString(),
+                  "finish": finish,
+                }
+                axios.post('http://localhost:8181/mywork/save',workdata).then(function (resp){
+                })
               })
               _this.$message({
                 type: 'success',
@@ -740,8 +780,32 @@ export default {
             }
             if(num == _this.userclass.classnum.length){
               _this.userclass.classnum[num] = value
-              _this.userclass.classnum = _this.userclass.classnum.join(',')
-              axios.put('http://localhost:8181/users/update', _this.userclass).then(function (rsp) {
+              let classdata = _this.userclass
+              classdata.classnum = _this.userclass.classnum.join(',')
+              classdata.myteach = _this.userclass.myteach.join(',')
+              axios.put('http://localhost:8181/users/update', classdata).then(function (rsp) {
+              })
+              axios.get('http://localhost:8181/class/findById/'+value).then(function (rp) {
+                alert("能拿到数据")
+                let workdata1 = rp.data
+                workdata1 = rp.data.assignment.split(',')
+                let datalen = workdata1.assignment.length
+                let finish = []
+                alert("datalen:" + datalen)
+                for(let i = 0; i < datalen; i++){
+                  finish[i] = 0
+                }
+                alert(finish)
+                finish = finish.join(',')
+                let workdata = {
+                  "myworkid": _this.userId + value.toString(),
+                  "userid": _this.userId,
+                  "classnum": value.toString(),
+                  "finish": finish,
+                }
+                alert(workdata)
+                axios.post('http://localhost:8181/mywork/save',workdata).then(function (resp){
+                })
               })
               _this.$message({
                 type: 'success',
@@ -776,8 +840,10 @@ export default {
               this.userclass.classnum[i+j] = this.userclass.classnum[i+j+1]
             }
             this.userclass.classnum.length = this.userclass.classnum.length-1
-            this.userclass.classnum = this.userclass.classnum.join(',')
-            axios.put('http://localhost:8181/users/update', this.userclass).then(function (resp) {
+            let classdata = this.userclass
+            classdata.classnum = this.userclass.classnum.join(',')
+            classdata.myteach = this.userclass.myteach.join(',')
+            axios.put('http://localhost:8181/users/update', classdata).then(function (resp) {
             })
             window.location.reload()
             return

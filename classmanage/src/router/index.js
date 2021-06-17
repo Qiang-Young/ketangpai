@@ -7,9 +7,10 @@ import Class from "../views/Class.vue";
 import Lunwen from "../views/Lunwen.vue";
 import Usersetting from "../views/Usersetting.vue";
 import Oneteachclass from "@/views/Oneteachclass";
+
 Vue.use(VueRouter)
 import Oneclass from "../views/Oneclass.vue";
-import Mywork from "../views/class/Mywork.vue";
+import Mywork from "../views/Mywork.vue";
 const routes = [
     {
         path: '/Mywork',
