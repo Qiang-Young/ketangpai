@@ -9,7 +9,9 @@ import javax.persistence.Id;
 @Data
 public class Mywork {
     @Id
-    public Integer userid;
+    public String myworkid;
+    public String userid;
     public String classnum;
     public String finish;
+    public String workfile;
 }
